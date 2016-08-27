@@ -3,3 +3,4 @@
 !*.hs
 !*.txt
 !.gitignore
+!*.md
