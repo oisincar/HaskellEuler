@@ -1,8 +1,11 @@
-
 import           System.Exit
 import           System.Process
+import           System.IO
 
 main = do
+  -- Print as soon as we can, no buffering.
+  hSetBuffering stdout NoBuffering
+
   files <- readProcess "bash" ["-c", "find Euler*hs"] "."
   mapM_ buildF (lines files)
 
