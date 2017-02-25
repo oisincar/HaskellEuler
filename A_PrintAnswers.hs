@@ -18,5 +18,8 @@ buildF file = do
     where takeOff n str = take (length str - n) str
 
 runF file exitC
-  | exitC == ExitSuccess = ("Ans: " ++) <$> readProcess ("./" ++ file) [] [] >>= putStr
-  | otherwise            = putStrLn "Can't run: Build Failed"
+  | exitC == ExitSuccess =
+      readProcessWithExitCode "/usr/bin/time" ["-f%Es", "./" ++ file] []
+      >>= (\(_,sOut,sErr) -> putStrLn $ filter (/= '\n')
+                             ("Runtime: " ++ sErr ++ " | Ans: " ++ sOut))
+  | otherwise = putStrLn "Can't run: Build Failed"
