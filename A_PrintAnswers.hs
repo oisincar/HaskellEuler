@@ -11,7 +11,7 @@ main = do
 
 buildF file = do
   putStr $ file ++ " | Building | "
-  exitCode <- system $ "ghc " ++ file ++ " -v0"
+  exitCode <- system $ "ghc " ++ file ++ " -v0 -O2"
 
   putStr "Running | "
   runF (takeOff 3 file) exitCode

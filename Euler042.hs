@@ -15,7 +15,4 @@ main = do
         triNums = map (\n -> n*(n+1) `div` 2) [1..]
         triSet = Set.fromList $ takeWhile (<= maximum scores) triNums
 
-    print words
-    print triSet
-
     print $ length $ filter (\n -> Set.member n triSet) scores
