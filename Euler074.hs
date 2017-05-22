@@ -9,14 +9,11 @@ depthNode n
   | n < 10^6  = arr ! n
   | otherwise = depth n
     where arr = array (0, 10^6) [(n, depth n) | n <- [1..10^6]]
-          depth :: Int -> Int
           depth n
-            -- | n == 145 = 1
             | n `elem` [871, 45361, 872, 45362] = 2
             | n `elem` [169, 363601, 1454] = 3
             | step n == n = 1
             | otherwise = 1 + depthNode (step n)
 
-step :: Int -> Int
 step n = sum $ map (fact . digitToInt) $ show n
   where fact n = (scanl (*) 1 [1..]) !! n
