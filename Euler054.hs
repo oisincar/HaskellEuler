@@ -29,22 +29,8 @@ main = do
 
   print ans
 
-
 sameFace (Card f1 _) (Card f2 _) = f1 == f2
 sameSuit (Card _ s1) (Card _ s2) = s1 == s2
-
-    -- High Card: Highest value card.
-    -- One Pair: Two cards of the same value.
-    -- Two Pairs: Two different pairs.
-    -- Three of a Kind: Three cards of the same value.
-    -- Straight: All cards are consecutive values.
-    -- Flush: All cards of the same suit.
-    -- Full House: Three of a kind and a pair.
-    -- Four of a Kind: Four cards of the same value.
-    -- Straight Flush: All cards are consecutive values of same suit.
-    -- Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
-
-
 
 data HandType = HighCard
               | OnePair Face
@@ -64,42 +50,25 @@ compareHands h1 h2 = compare (classifyHand h1, reverse.sort $ h1)
 
 classifyHand :: [Card] -> HandType
 classifyHand cs
-  | highF == FA && isF && isS    = RoyalFlush
-  | isF && isS                   = StraightFlush
-  | (length . head) grouped == 4 = FourKind (face $ (head.head) grouped)
-
-  | (length . head) grouped  == 3
-  && (length (grouped !! 1)) == 2 = FullHouse (face . head $ grouped !! 0)
-                                              (face . head $ grouped !! 1)
-
-  | isF = Flush
-  | isS = Straight
-
-  | (length . head) grouped  == 3 = ThreeKind (face . head $ grouped !! 0)
-
-  | (length . head) grouped  == 2
-  && (length (grouped !! 1)) == 2 = TwoPairs (face . head $ grouped !! 0)
-                                             (face . head $ grouped !! 1)
-
-  | (length . head) grouped  == 2 = OnePair (face . head $ grouped !! 0)
-
-  | (length . head) grouped == 1 = HighCard
+  -- | isF && isS && highF == FA      = RoyalFlush
+  | isF && isS                     = StraightFlush
+  | bigGSize == 4                  = FourKind bigGFace
+  | bigGSize == 3 && sndgsize == 2 = FullHouse bigGFace sndGFace
+  | isF                            = Flush
+  | isS                            = Straight
+  | bigGSize == 3                  = ThreeKind bigGFace
+  | bigGSize == 2 && sndgsize == 2 = TwoPairs bigGFace sndGFace
+  | bigGSize == 2                  = OnePair bigGFace
+  | bigGSize == 1                  = HighCard
 
   where
     cards = (reverse . sort) cs
-    (Card highF _) = head cards
-    isF = isFlush cards
-    isS = isStraight cards
+    -- (Card highF _) = head cards
+    isF = all (sameSuit $ head cs) $ tail cs
+    isS = and $ zipWith (\c1 c2 -> (succ . face) c1 == face c2) (tail cards) cards
     grouped = reverse $ sortBy (comparing length) $ groupBy sameFace cards
 
-isFlush :: [Card] -> Bool
-isFlush (c:cs) = all (sameSuit c) cs
-
-isStraight :: [Card] -> Bool
-isStraight cs = and $ zipWith (\(Card f1 _) (Card f2 _) -> succ f1 == f2) (tail cs) cs
-
-th1 = map readCard $ words "5H 5C 6S 7S KD"
-th2 = map readCard $ words "2C 3S 8S 8D TD"
-th3 = map readCard $ words "2C 3S 4S 5D 6D"
-
-groupC cards = reverse $ sortBy (comparing length) $ groupBy sameFace cards
+    bigGSize = length (grouped !! 0) -- big group size
+    bigGFace = face . head $ (grouped !! 0)
+    sndgsize = length (grouped !! 1) -- small group size
+    sndGFace = face . head $ (grouped !! 1)
