@@ -4,8 +4,7 @@ import Data.Char
 import Data.List
 
 main = do
-  -- file <- readFile "./p059_cipher.txt"
-  file <- readFile "/home/oisincar/DevCrap/HaskellSwag/HaskellEuler/p059_cipher.txt"
+  file <- readFile "./p059_cipher.txt"
   let numbers = (read :: String -> [Int]) ("[" ++ file ++ "]")
   let msg = combine
             (snd $ letter2 $ take3rd numbers)
