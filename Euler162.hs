@@ -1,8 +1,10 @@
 {-# LANGUAGE RankNTypes #-}
 
 import qualified Data.MemoCombinators as Memo
+import Numeric
+import Data.Char
 
-main = print $ solve 16
+main = putStrLn . map toUpper $ showHex (solve 16) ""
 
 solve :: Int -> Integer
 solve 0 = 0
