@@ -2,8 +2,9 @@ singles = [1..20] ++ [25]
 doubles = map (*2) singles
 triples = [3,6..60]
 
-ans = (ways b 1) + (ways b 2) + (ways b 3)
-  where b = 100
+main = print ans
+  where ans = (ways b 1) + (ways b 2) + (ways b 3)
+        b = 100
 
 ways bound throws
   | throws == 0 = if (bound <= 0) then 0 else 1
