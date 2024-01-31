@@ -1,6 +1,7 @@
 *
 !*/
 !*.hs
+!*.cpp
 !*.txt
 !.gitignore
 !*.md
